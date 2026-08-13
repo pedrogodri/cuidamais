@@ -21,13 +21,22 @@ Prettier + Husky/lint-staged, EAS Build (dev client).
 
 **Spec:** `docs/superpowers/specs/2026-08-12-rn-app-architecture-design.md`
 
+**Project location:** The app lives at `mobile/` (repo root will host other
+projects, e.g. a future backend), not at the repo root. Task 1 originally
+scaffolded the app at the repo root; a follow-up commit
+(`chore: move RN app into mobile/ subdirectory`) relocated everything into
+`mobile/` after Task 5. All `cd`/path commands below already reflect the
+`mobile/` location — treat every relative path in this plan (`src/...`,
+`app/...`, `package.json`, etc.) as relative to `mobile/`.
+
 ## Global Constraints
 
 - TypeScript everywhere — no `.js` source files.
-- Feature code lives under `src/features/<name>/`; `app/` route files stay
-  thin (composition + navigation only), per spec's folder structure.
-- All outbound HTTP goes through `src/shared/api/client.ts` — no feature
-  calls `axios`/`fetch` directly.
+- Feature code lives under `mobile/src/features/<name>/`; `mobile/app/`
+  route files stay thin (composition + navigation only), per spec's folder
+  structure.
+- All outbound HTTP goes through `mobile/src/shared/api/client.ts` — no
+  feature calls `axios`/`fetch` directly.
 - Tests live next to the code they test (no separate `__tests__` tree).
 - Node package manager: npm (repo has no lockfile yet; use `npm` for all
   installs so `package-lock.json` stays authoritative).

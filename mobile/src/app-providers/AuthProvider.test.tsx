@@ -11,7 +11,21 @@ describe('AuthProvider', () => {
   });
 
   it('starts with no session and isLoading true, then false once checked', async () => {
+    let resolveGetItem: (value: string | null) => void;
+    (SecureStore.getItemAsync as jest.Mock).mockImplementation(
+      () =>
+        new Promise<string | null>((resolve) => {
+          resolveGetItem = resolve;
+        }),
+    );
+
     const { result } = await renderHook(() => useAuth(), { wrapper: AuthProvider });
+
+    expect(result.current.isLoading).toBe(true);
+
+    await act(async () => {
+      resolveGetItem(null);
+    });
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
     expect(result.current.session).toBeNull();

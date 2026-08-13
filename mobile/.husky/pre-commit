@@ -1,1 +1,1 @@
-ESLINT_USE_FLAT_CONFIG=false npx lint-staged
+cd mobile && ESLINT_USE_FLAT_CONFIG=false npx lint-staged

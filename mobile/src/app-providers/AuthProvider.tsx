@@ -21,10 +21,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    SecureStore.getItemAsync(TOKEN_KEY).then((token) => {
-      setSession(token ? { token } : null);
-      setIsLoading(false);
-    });
+    SecureStore.getItemAsync(TOKEN_KEY)
+      .then((token) => {
+        setSession(token ? { token } : null);
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setSession(null);
+        setIsLoading(false);
+      });
   }, []);
 
   async function signIn(newSession: AuthSession) {

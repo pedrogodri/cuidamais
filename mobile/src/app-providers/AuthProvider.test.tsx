@@ -31,6 +31,15 @@ describe('AuthProvider', () => {
     expect(result.current.session).toBeNull();
   });
 
+  it('treats a SecureStore read failure as logged out instead of hanging', async () => {
+    (SecureStore.getItemAsync as jest.Mock).mockRejectedValue(new Error('keychain error'));
+
+    const { result } = await renderHook(() => useAuth(), { wrapper: AuthProvider });
+
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+    expect(result.current.session).toBeNull();
+  });
+
   it('signIn stores the token and updates session', async () => {
     (SecureStore.setItemAsync as jest.Mock).mockResolvedValue(undefined);
     const { result } = await renderHook(() => useAuth(), { wrapper: AuthProvider });

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { Button } from '@/shared/ui/Button';
+import { Caption, H1, H3, Overline } from '@/shared/ui/Typography';
 import { formatElapsed } from '../formatElapsed';
 
 interface OngoingCareCardProps {
@@ -22,9 +23,7 @@ export function OngoingCareCard({ clientName, clockInTime }: OngoingCareCardProp
   return (
     <View className="gap-4 rounded-md border border-neutral-200 bg-white p-4">
       <View className="flex-row items-center justify-between">
-        <Text className="font-body-medium text-caption uppercase tracking-widest text-neutral-500">
-          Atendimento em andamento
-        </Text>
+        <Overline className="font-body-medium text-caption">Atendimento em andamento</Overline>
         <View className="h-2 w-2 rounded-full bg-success-500" />
       </View>
 
@@ -33,14 +32,14 @@ export function OngoingCareCard({ clientName, clockInTime }: OngoingCareCardProp
           <Ionicons name="person-outline" size={22} color="#1C5D52" />
         </View>
         <View>
-          <Text className="font-display-medium text-h3 text-neutral-900">{clientName}</Text>
-          <Text className="font-body text-caption text-neutral-500">Clock-in às {clockInTime}</Text>
+          <H3>{clientName}</H3>
+          <Caption>Clock-in às {clockInTime}</Caption>
         </View>
       </View>
 
       <View className="items-center rounded-sm bg-petrol-100 py-4">
-        <Text className="font-mono text-h1 text-petrol-700">{formatElapsed(elapsedSeconds)}</Text>
-        <Text className="font-body text-caption text-neutral-700">Tempo trabalhado</Text>
+        <H1 className="font-mono text-petrol-700">{formatElapsed(elapsedSeconds)}</H1>
+        <Caption className="text-neutral-700">Tempo trabalhado</Caption>
       </View>
 
       <Button label="Finalizar atendimento" tone="petrol" onPress={() => {}} />

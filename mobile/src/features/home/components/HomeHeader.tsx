@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
+import { BodyLarge, Caption, H3 } from '@/shared/ui/Typography';
 import { getGreeting } from '../getGreeting';
 
 interface HomeHeaderProps {
@@ -21,13 +22,11 @@ export function HomeHeader({ name }: HomeHeaderProps) {
     <View className="flex-row items-center justify-between">
       <View className="flex-row items-center gap-3">
         <View className="h-12 w-12 items-center justify-center rounded-full bg-petrol-100">
-          <Text className="font-display-medium text-body-lg text-petrol-700">
-            {getInitials(name)}
-          </Text>
+          <BodyLarge className="font-display-medium text-petrol-700">{getInitials(name)}</BodyLarge>
         </View>
         <View>
-          <Text className="font-body text-caption text-neutral-500">{getGreeting()}</Text>
-          <Text className="font-display-medium text-h3 text-neutral-900">{name}</Text>
+          <Caption>{getGreeting()}</Caption>
+          <H3>{name}</H3>
         </View>
       </View>
       <Pressable accessibilityRole="button" accessibilityLabel="Notificações" hitSlop={12}>

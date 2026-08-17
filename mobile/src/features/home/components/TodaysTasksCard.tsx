@@ -1,4 +1,5 @@
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
+import { Body, Caption, H3 } from '@/shared/ui/Typography';
 import type { MockTask } from '../mockData';
 
 interface TodaysTasksCardProps {
@@ -8,17 +9,15 @@ interface TodaysTasksCardProps {
 export function TodaysTasksCard({ tasks }: TodaysTasksCardProps) {
   return (
     <View className="gap-3 rounded-md border border-neutral-200 bg-white p-4">
-      <Text className="font-display-medium text-h3 text-neutral-900">Tarefas de hoje</Text>
+      <H3>Tarefas de hoje</H3>
       <View className="gap-3">
         {tasks.map((task) => (
           <View key={task.id} className="flex-row items-center gap-3">
-            <Text className="font-mono text-caption text-neutral-500">{task.time}</Text>
-            <Text className="font-body-medium text-body flex-1 text-neutral-900">{task.title}</Text>
+            <Caption className="font-mono">{task.time}</Caption>
+            <Body className="font-body-medium flex-1 text-neutral-900">{task.title}</Body>
             {task.priority === 'high' ? (
               <View className="rounded-pill bg-amber-100 px-3 py-1">
-                <Text className="font-body-medium text-caption text-amber-700">
-                  Alta prioridade
-                </Text>
+                <Caption className="font-body-medium text-amber-700">Alta prioridade</Caption>
               </View>
             ) : null}
           </View>

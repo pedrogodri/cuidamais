@@ -1,9 +1,10 @@
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import {
   useActiveProfileStore,
   type ProfileType,
 } from '@/features/auth/store/useActiveProfileStore';
 import { getProfileTheme, PROFILE_ORDER } from '@/features/auth/theme/profileTheme';
+import { Caption } from '@/shared/ui/Typography';
 
 export function ProfileModeSwitcher() {
   const activeType = useActiveProfileStore((state) => state.activeProfile?.type);
@@ -25,19 +26,17 @@ export function ProfileModeSwitcher() {
             accessibilityLabel={theme.label}
             accessibilityState={{ selected }}
             onPress={() => handleSelect(type)}
-            className={`flex-1 items-center rounded-pill border-2 px-3 py-2 ${
+            className={`min-h-[48px] flex-1 items-center justify-center rounded-pill border-2 px-3 py-2 ${
               selected
                 ? `${theme.borderClass500} ${theme.bgClass100}`
                 : 'border-transparent bg-neutral-100'
             }`}
           >
-            <Text
-              className={`font-body-medium text-caption ${
-                selected ? theme.textClass700 : 'text-neutral-500'
-              }`}
+            <Caption
+              className={`font-body-medium ${selected ? theme.textClass700 : 'text-neutral-500'}`}
             >
               {theme.label}
-            </Text>
+            </Caption>
           </Pressable>
         );
       })}

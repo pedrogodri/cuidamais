@@ -1,8 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { ScrollView, Text, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button } from '@/shared/ui/Button';
+import { Body, Caption } from '@/shared/ui/Typography';
 import { useActiveProfileStore } from '@/features/auth/store/useActiveProfileStore';
 import { HomeHeader } from '@/features/home/components/HomeHeader';
 import { MedicationsCard } from '@/features/home/components/MedicationsCard';
@@ -47,9 +48,7 @@ export default function Home() {
       {isFamilyMode ? (
         <View className="gap-4">
           {activeProfile?.type === 'family' ? (
-            <Text className="font-body-medium text-caption text-neutral-500">
-              Cuidando de: {MOCK_CARED_PERSON_NAME}
-            </Text>
+            <Caption className="font-body-medium">Cuidando de: {MOCK_CARED_PERSON_NAME}</Caption>
           ) : null}
           <MedicationsCard medications={MOCK_MEDICATIONS} />
           <VitalSignsCard {...MOCK_VITAL_SIGNS} />
@@ -60,17 +59,15 @@ export default function Home() {
       {!activeProfile ? (
         <View className="items-center gap-3 rounded-md border border-dashed border-neutral-300 bg-white p-6">
           <Ionicons name="hand-left-outline" size={28} color="#8B8880" />
-          <Text className="text-center font-body text-body text-neutral-700">
-            Escolha um modo acima para ver sua Home.
-          </Text>
+          <Body className="text-center">Escolha um modo acima para ver sua Home.</Body>
         </View>
       ) : null}
 
       {activeProfile?.type !== 'caregiver' ? (
         <View className="gap-3 border-t border-neutral-100 pt-6">
-          <Text className="font-body text-body text-neutral-500">
+          <Body className="text-neutral-500">
             Quer prestar cuidado profissional? Ative um perfil de Cuidador na mesma conta.
-          </Text>
+          </Body>
           <Button
             label="Quero ser cuidador"
             variant="secondary"

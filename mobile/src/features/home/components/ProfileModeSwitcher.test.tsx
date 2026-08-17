@@ -27,4 +27,15 @@ describe('ProfileModeSwitcher', () => {
       selected: true,
     });
   });
+
+  it('atualiza o chip selecionado ao pressionar um diferente', async () => {
+    useActiveProfileStore.getState().setActiveProfile({ type: 'caregiver', id: 'preview' });
+    await render(<ProfileModeSwitcher />);
+
+    await fireEvent.press(screen.getByText('Pessoa cuidada'));
+
+    expect(screen.getByRole('radio', { name: /Pessoa cuidada/ })).toHaveProp('accessibilityState', {
+      selected: true,
+    });
+  });
 });

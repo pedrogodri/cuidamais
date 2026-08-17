@@ -104,10 +104,16 @@ visual de cronômetro rodando.
 
 ## Testes
 
-Sem lógica de negócio própria além do `ProfileModeSwitcher` chamando
-`setActiveProfile` (já coberto por `useActiveProfileStore.test.ts`). Os
-cards são apresentacionais com dados mockados fixos — verificação é
-visual (screenshot no simulador por modo), como nas outras telas.
+- `getGreeting.test.ts` e `formatElapsed.test.ts` cobrem os dois helpers
+  puros (saudação por horário, formatação `HH:MM:SS` do cronômetro).
+- `HomeHeader.test.tsx` e `ProfileModeSwitcher.test.tsx` cobrem os
+  componentes fixos do topo com RTL, incluindo o `ProfileModeSwitcher`
+  chamando `setActiveProfile` de verdade no store ao tocar num chip (o
+  store em si já tem sua própria suíte em `useActiveProfileStore.test.ts`).
+- Os cinco cards (`OngoingCareCard`, `TodaysTasksCard`, `MedicationsCard`,
+  `VitalSignsCard`, `UpcomingAppointmentCard`) são apresentacionais com
+  dados mockados fixos e não têm arquivo de teste dedicado — verificação é
+  visual (screenshot no simulador por modo), como nas outras telas.
 
 ## Decisão original
 

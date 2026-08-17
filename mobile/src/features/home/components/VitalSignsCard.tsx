@@ -1,4 +1,5 @@
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
+import { BodyLarge, Caption, H3 } from '@/shared/ui/Typography';
 
 interface VitalSignsCardProps {
   bloodPressure: string;
@@ -16,21 +17,21 @@ export function VitalSignsCard({
   return (
     <View className="gap-3 rounded-md border border-neutral-200 bg-white p-4">
       <View className="flex-row items-center justify-between">
-        <Text className="font-display-medium text-h3 text-neutral-900">Sinais vitais</Text>
-        <Text className="font-body text-caption text-neutral-500">{recordedAt}</Text>
+        <H3>Sinais vitais</H3>
+        <Caption>{recordedAt}</Caption>
       </View>
       <View className="flex-row gap-4">
         <View className="flex-1 gap-1">
-          <Text className="font-body text-caption text-neutral-500">Pressão</Text>
-          <Text className="font-mono text-body-lg text-neutral-900">{bloodPressure}</Text>
+          <Caption>Pressão</Caption>
+          <BodyLarge className="font-mono">{bloodPressure}</BodyLarge>
         </View>
         <View className="flex-1 gap-1">
-          <Text className="font-body text-caption text-neutral-500">Glicemia</Text>
-          <Text className="font-mono text-body-lg text-neutral-900">{glucose}</Text>
+          <Caption>Glicemia</Caption>
+          <BodyLarge className="font-mono">{glucose}</BodyLarge>
         </View>
         <View className="flex-1 gap-1">
-          <Text className="font-body text-caption text-neutral-500">Peso</Text>
-          <Text className="font-mono text-body-lg text-neutral-900">{weight}</Text>
+          <Caption>Peso</Caption>
+          <BodyLarge className="font-mono">{weight}</BodyLarge>
         </View>
       </View>
     </View>

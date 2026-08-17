@@ -32,6 +32,7 @@ mocked, decisions and gotchas specific to it (not general conventions):
   got removed (profile-choice) and what still uses the leftover pieces.
 - `docs/features/caregiver-onboarding.md` — the 11-screen mocked identity
   verification flow, its state machine, the OTP test code.
+- `docs/features/home.md` — a Home unificada, como ela muda por perfil ativo, o que é mockado.
 
 Visual design system (colors, typography, spacing, component specs) lives at
 `docs/design/design-system.md`.

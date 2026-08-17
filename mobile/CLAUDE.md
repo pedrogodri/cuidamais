@@ -21,6 +21,7 @@ Single test file: `npx jest path/to/File.test.tsx` (needs `NODE_OPTIONS=--no-exp
 Deep-dive docs, read the relevant one before working in that area:
 
 - `docs/architecture.md` — feature-based folder structure, session vs. active-profile model, route guards, data layer, navigation groups.
+- `docs/requirements.md` — functional/non-functional requirements and business rules (RF/RNF/NEG). Read before implementing any new feature — it's the requirements contract the implementation needs to satisfy, and it tracks known gaps between a requirement and what the code currently does.
 - `docs/conventions.md` — component/design-token conventions, safe-area handling, testing patterns (including an RTL `await` gotcha).
 - `docs/reanimated-and-motion.md` — `react-native-reanimated` usage patterns and two version-specific gotchas (`scrollTo` needing `runOnUI`, `entering`/`exiting` Layout Animations crashing).
 - `docs/dev-workflow.md` — native build workflow, the `expo prebuild` gotcha after changing `app.json`/assets, dev-only navigation-state persistence, icon/splash asset specs.

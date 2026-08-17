@@ -66,6 +66,17 @@ hoje — só a origem do valor é manual em vez de vir de uma sessão
 persistida. Trocar os chips por uma escolha real de perfil pós-login é
 substituir a fonte do `setActiveProfile`, não reescrever o consumidor.
 
+**Direção decidida pro próximo ciclo (ainda não implementada):** a versão
+real não vai ser 3 chips sempre visíveis — vai ser um **dropdown na Home**
+que só lista os perfis que a conta realmente tem vinculados (ex: alguém
+que só é Responsável não vê "Cuidador" como opção). Isso também fecha o
+gap do RF21/NEG06 em `../requirements.md` — o dropdown na Home passa a ser
+o mecanismo de "escolha de perfil" que aquele requisito pede, no lugar da
+tela de escolha centralizada que existia antes (`profile-choice.tsx`,
+removida — ver `auth-flow.md`). Vai exigir uma lista real de perfis
+vinculados à conta (hoje só existe o perfil ativo, não a lista de quais
+existem) antes de dar pra construir de verdade.
+
 A ordem dos chips (`PROFILE_ORDER` em
 `src/features/auth/theme/profileTheme.ts`) é Cuidador → Pessoa cuidada →
 Responsável, e cada chip usa a cor do perfil (`getProfileTheme`) quando

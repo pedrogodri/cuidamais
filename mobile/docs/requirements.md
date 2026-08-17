@@ -193,11 +193,14 @@ conhecidos" abaixo)_
   redireciona pra `/(auth)` (a Splash) quando o perfil exigido não existe
   na conta, não pra uma tela de escolha de perfil dedicada — porque essa
   tela (`profile-choice.tsx`) foi removida quando o fluxo virou "login
-  único → Home direto" (ver `features/auth-flow.md`). Hoje "ativar um
-  perfil" acontece a partir de um CTA na Home (`app/(shared)/home.tsx`),
-  não de uma tela de escolha centralizada. Quando esse fluxo for revisado,
-  o guard provavelmente deveria redirecionar pra `/(shared)/home` em vez
-  de `/(auth)`, já que a Home é hoje o único lugar que oferece "ativar
-  perfil". Decisão consciente de não mexer nisso agora — ver
-  `docs/superpowers/specs/2026-08-17-unified-home-design.md` pro contexto
-  de por que a escolha de perfil saiu do caminho principal.
+  único → Home direto" (ver `features/auth-flow.md`). **Direção decidida**:
+  a escolha de perfil não volta a ser uma tela separada — vai ser um
+  **dropdown na própria Home**, listando só os perfis que a conta
+  realmente tem vinculados (não os três sempre visíveis como o
+  `ProfileModeSwitcher` de teste mostra hoje). Isso significa que
+  `useProfileGuard` deveria redirecionar pra `/(shared)/home` em vez de
+  `/(auth)` quando implementado — o RF21 passa a ser satisfeito pelo
+  dropdown, não por uma tela dedicada. Ainda não construído: falta uma
+  lista real de perfis vinculados à conta (hoje só existe o perfil ativo
+  em si). Ver `features/home.md` seção `ProfileModeSwitcher` pro detalhe
+  completo dessa decisão.

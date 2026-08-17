@@ -107,6 +107,17 @@ diferentes dentro de `src/`.
 
 - Colocados ao lado do arquivo testado (`Button.tsx` + `Button.test.tsx`),
   nunca em pasta `__tests__` separada.
+- **Exceção: nunca coloque um `.test.tsx` dentro de `app/`.** Expo Router
+  varre todo arquivo em `app/` como rota em potencial, e o Metro tenta
+  empacotar tudo que esse arquivo importa no bundle nativo real — inclusive
+  `@testing-library/react-native`, que importa o módulo `console` do Node
+  (não existe no runtime RN) e quebra o build do app com "iOS Bundling
+  failed" / "attempted to import the Node standard library module". Uma
+  tela em `app/` (ex: `home.tsx`) ainda pode ser testada — o teste só não
+  pode morar ao lado dela; `metro.config.js` tem um `resolver.blockList`
+  que exclui `**/*.test.{ts,tsx,js,jsx}` do bundle nativo justamente para
+  isso, mas o Jest (que usa `jest.config.js`, não o Metro) continua achando
+  e rodando esses testes normalmente.
 - `@testing-library/react-native` nesta versão exige `await` em operações
   assíncronas que antes eram síncronas noutras versões: **`await
 render(...)`** e **`await fireEvent.press(...)` /

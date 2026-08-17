@@ -29,10 +29,10 @@ export default function Signup() {
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
-    // Account creation is profile-neutral: a person can hold caregiver and
-    // family profiles on the same account, so profile choice happens after
-    // signup rather than tagging the account itself.
-    router.push('/(auth)/profile-choice');
+    // One login covers every profile a person might hold — signup goes
+    // straight to Home; picking up a specific profile (e.g. caregiver) is a
+    // later, separate flow reachable from there, not part of signup itself.
+    router.replace('/(shared)/home');
   }
 
   return (

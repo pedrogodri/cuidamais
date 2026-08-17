@@ -6,13 +6,28 @@ import { Button } from '@/shared/ui/Button';
 import { TextField } from '@/shared/ui/TextField';
 import { H1 } from '@/shared/ui/Typography';
 
+interface FormErrors {
+  contact?: string;
+  password?: string;
+}
+
 export default function Login() {
   const insets = useSafeAreaInsets();
   const [contact, setContact] = useState('');
   const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState<FormErrors>({});
 
   function handleSubmit() {
-    // Signup/login network integration is out of scope for this design pass.
+    const nextErrors: FormErrors = {};
+    if (!contact.trim()) nextErrors.contact = 'Informe seu e-mail ou telefone.';
+    if (!password) nextErrors.password = 'Informe sua senha.';
+    setErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0) return;
+
+    // Login network integration is out of scope for this design pass —
+    // any filled-in credentials are accepted so the rest of the app is
+    // reachable for review.
+    router.replace('/(shared)/home');
   }
 
   return (
@@ -32,6 +47,7 @@ export default function Login() {
           keyboardType="email-address"
           value={contact}
           onChangeText={setContact}
+          error={errors.contact}
         />
         <TextField
           label="Senha"
@@ -39,6 +55,7 @@ export default function Login() {
           isPassword
           value={password}
           onChangeText={setPassword}
+          error={errors.password}
         />
       </View>
 
@@ -53,7 +70,7 @@ export default function Login() {
       <Pressable
         accessibilityRole="link"
         className="items-center pt-8"
-        onPress={() => router.push('/(auth)/profile-choice')}
+        onPress={() => router.push('/(auth)/signup')}
       >
         <Text className="font-body text-body text-petrol-500 underline">
           Não tem conta? Cadastre-se

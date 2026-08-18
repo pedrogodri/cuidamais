@@ -107,17 +107,18 @@ diferentes dentro de `src/`.
 
 - Colocados ao lado do arquivo testado (`Button.tsx` + `Button.test.tsx`),
   nunca em pasta `__tests__` separada.
-- **Exceção: nunca coloque um `.test.tsx` dentro de `app/`.** Expo Router
-  varre todo arquivo em `app/` como rota em potencial, e o Metro tenta
-  empacotar tudo que esse arquivo importa no bundle nativo real — inclusive
+- **Telas em `app/` também seguem "teste ao lado do arquivo"** (ex:
+  `app/(shared)/home.tsx` + `home.test.tsx`, `app/(auth)/login.tsx` +
+  `login.test.tsx`). Isso funciona apesar de o Expo Router varrer todo
+  arquivo em `app/` como rota em potencial e o Metro tentar empacotar tudo
+  que um `.test.tsx` importa no bundle nativo real — inclusive
   `@testing-library/react-native`, que importa o módulo `console` do Node
-  (não existe no runtime RN) e quebra o build do app com "iOS Bundling
-  failed" / "attempted to import the Node standard library module". Uma
-  tela em `app/` (ex: `home.tsx`) ainda pode ser testada — o teste só não
-  pode morar ao lado dela; `metro.config.js` tem um `resolver.blockList`
-  que exclui `**/*.test.{ts,tsx,js,jsx}` do bundle nativo justamente para
-  isso, mas o Jest (que usa `jest.config.js`, não o Metro) continua achando
-  e rodando esses testes normalmente.
+  (não existe no runtime RN) e quebraria o build com "iOS Bundling failed"
+  / "attempted to import the Node standard library module" — porque
+  `metro.config.js` tem um `resolver.blockList` que exclui
+  `/\.test\.[jt]sx?$/` do bundle nativo. O Jest (que usa `jest.config.js`,
+  não o Metro) ignora esse blockList e continua achando e rodando esses
+  testes normalmente.
 - `@testing-library/react-native` nesta versão exige `await` em operações
   assíncronas que antes eram síncronas noutras versões: **`await
 render(...)`** e **`await fireEvent.press(...)` /
@@ -127,6 +128,18 @@ render(...)`** e **`await fireEvent.press(...)` /
   comportamento não mudou, confira primeiro se falta esse `await`.
 - Mocke módulos nativos com `jest.mock('nome-do-modulo')` (ver
   `AuthProvider.test.tsx` mockando `expo-secure-store`).
+- **Overlay com `Modal` + `measureInWindow` funciona em teste sem mock,
+  mas com uma pegadinha**: o `Modal` do React Native renderiza seus filhos
+  normalmente no ambiente de teste (RNTL não faz portal real, então
+  `getByRole`/`getByText` acham o conteúdo do Modal igual a qualquer outro
+  `View`). Já `ref.measureInWindow(callback)` não invoca o callback nesse
+  ambiente (não há layout nativo real pra medir) — se abrir o overlay
+  depender de esperar por esse callback, o teste trava. Padrão usado em
+  `ProfileSwitcherDropdown.tsx`: abrir o overlay (`setIsOpen(true)`) de
+  forma síncrona no `onPress`, e chamar `measureInWindow` só pra
+  atualizar a posição visual depois, com um valor de fallback já definido
+  no estado inicial — assim o componente abre e funciona no teste mesmo
+  quando a medição nunca resolve.
 - Rode a suíte com `npm test` (não `npx jest` direto) — o script já inclui a
   flag `NODE_OPTIONS=--no-experimental-webstorage` necessária neste
   ambiente/versão do Node; sem ela alguns testes falham com

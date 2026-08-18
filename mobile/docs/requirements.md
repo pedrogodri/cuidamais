@@ -188,19 +188,15 @@ conhecidos" abaixo)_
 - **RF19 (SOS) e RF10 (chat)** — nenhum dos dois existe ainda. `(shared)`
   é o grupo de rota correto pra ambos quando forem construídos (acessível
   de qualquer perfil ativo, sem guard próprio).
-- **RF21 / NEG06 (redirecionar pra escolha de perfil)** — hoje
-  `useProfileGuard` (`src/features/auth/guards/useProfileGuard.ts`)
-  redireciona pra `/(auth)` (a Splash) quando o perfil exigido não existe
-  na conta, não pra uma tela de escolha de perfil dedicada — porque essa
-  tela (`profile-choice.tsx`) foi removida quando o fluxo virou "login
-  único → Home direto" (ver `features/auth-flow.md`). **Direção decidida**:
-  a escolha de perfil não volta a ser uma tela separada — vai ser um
-  **dropdown na própria Home**, listando só os perfis que a conta
-  realmente tem vinculados (não os três sempre visíveis como o
-  `ProfileModeSwitcher` de teste mostra hoje). Isso significa que
-  `useProfileGuard` deveria redirecionar pra `/(shared)/home` em vez de
-  `/(auth)` quando implementado — o RF21 passa a ser satisfeito pelo
-  dropdown, não por uma tela dedicada. Ainda não construído: falta uma
-  lista real de perfis vinculados à conta (hoje só existe o perfil ativo
-  em si). Ver `features/home.md` seção `ProfileModeSwitcher` pro detalhe
-  completo dessa decisão.
+- **RF21 / NEG06 (redirecionar pra escolha de perfil)** — parcialmente
+  fechado. A escolha de perfil não é mais uma tela separada — é o
+  **`ProfileSwitcherDropdown` na própria Home**
+  (`src/features/home/components/ProfileSwitcherDropdown.tsx`), que lista
+  só os perfis vinculados à conta (mockados em
+  `src/features/auth/mockLinkedProfiles.ts`, já que ainda não existe uma
+  lista real vinda de conta autenticada — ver `features/home.md`).
+  **Ainda falta**: `useProfileGuard`
+  (`src/features/auth/guards/useProfileGuard.ts`) continua redirecionando
+  pra `/(auth)` (a Splash) quando o perfil exigido não existe na conta, em
+  vez de `/(shared)/home` — a tela antiga (`profile-choice.tsx`, removida —
+  ver `features/auth-flow.md`) nunca foi substituída no guard, só na Home.

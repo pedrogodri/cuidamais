@@ -8,7 +8,7 @@ import { useActiveProfileStore } from '@/features/auth/store/useActiveProfileSto
 import { HomeHeader } from '@/features/home/components/HomeHeader';
 import { MedicationsCard } from '@/features/home/components/MedicationsCard';
 import { OngoingCareCard } from '@/features/home/components/OngoingCareCard';
-import { ProfileModeSwitcher } from '@/features/home/components/ProfileModeSwitcher';
+import { ProfileSwitcherDropdown } from '@/features/home/components/ProfileSwitcherDropdown';
 import { TodaysTasksCard } from '@/features/home/components/TodaysTasksCard';
 import { UpcomingAppointmentCard } from '@/features/home/components/UpcomingAppointmentCard';
 import { VitalSignsCard } from '@/features/home/components/VitalSignsCard';
@@ -33,7 +33,7 @@ export default function Home() {
       contentContainerStyle={{ paddingTop: insets.top + 16, paddingBottom: insets.bottom + 24 }}
     >
       <HomeHeader name="Maria Silva" />
-      <ProfileModeSwitcher />
+      <ProfileSwitcherDropdown />
 
       {activeProfile?.type === 'caregiver' ? (
         <View className="gap-4">
@@ -42,6 +42,11 @@ export default function Home() {
             clockInTime={MOCK_ONGOING_CARE.clockInTime}
           />
           <TodaysTasksCard tasks={MOCK_TODAYS_TASKS} />
+          <Button
+            label="Ver meu perfil público"
+            variant="secondary"
+            onPress={() => router.push('/(caregiver)')}
+          />
         </View>
       ) : null}
 

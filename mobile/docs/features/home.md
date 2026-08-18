@@ -9,7 +9,7 @@ ver `../architecture.md`.
 
 O painel inicial pós-login, que muda de conteúdo conforme o **perfil
 ativo** (`useActiveProfileStore`), lido em `app/(shared)/home.tsx`. Header
-e `ProfileModeSwitcher` são fixos; a seção principal troca por tipo de
+e `ProfileSwitcherDropdown` são fixos; a seção principal troca por tipo de
 perfil (`caregiver` / `family` / `cared_person`).
 
 ## Estrutura
@@ -20,7 +20,7 @@ app/(shared)/home.tsx                                  — lê useActiveProfileS
 src/features/home/
   components/
     HomeHeader.tsx               — saudação + avatar (iniciais) + sino
-    ProfileModeSwitcher.tsx      — 3 chips, chama setActiveProfile de verdade
+    ProfileSwitcherDropdown.tsx  — fechado mostra o perfil ativo, aberto lista os vinculados
     OngoingCareCard.tsx          — modo Cuidador: cliente, clock-in, cronômetro
     TodaysTasksCard.tsx          — modo Cuidador: lista de tarefas do dia
     MedicationsCard.tsx          — modo família: remédios do dia
@@ -36,7 +36,8 @@ src/features/home/
 `activeProfile?.type` decide qual bloco aparece; `family` e `cared_person`
 compartilham o mesmo bloco de conteúdo (`isFamilyMode` em `home.tsx`):
 
-- **`caregiver`**: `OngoingCareCard` + `TodaysTasksCard`.
+- **`caregiver`**: `OngoingCareCard` + `TodaysTasksCard` + botão "Ver meu
+  perfil público" (→ `/(caregiver)`, ver `caregiver-profile.md`).
 - **`family`**: legenda "Cuidando de: {nome}" + `MedicationsCard` +
   `VitalSignsCard` + `UpcomingAppointmentCard`.
 - **`cared_person`**: os mesmos três cards de `family`, mas sem a legenda —
@@ -49,38 +50,55 @@ O CTA "Quero ser cuidador" (→ `/(caregiver-onboarding)/intro`, ver
 `caregiver-onboarding.md`) aparece pra qualquer perfil que não seja
 `caregiver`, inclusive quando `activeProfile` é `null`.
 
-## `ProfileModeSwitcher`: por que é real, não decorativo
+## `ProfileSwitcherDropdown`: por que é real, não decorativo
 
 Não existe ainda login que decida qual perfil está ativo (uma conta pode
 ter vários — Cuidador, Responsável, Pessoa cuidada — mas isso é decidido
-depois do login, não no cadastro; ver `auth-flow.md`). Enquanto essa peça
-não existe, o `ProfileModeSwitcher` da própria Home **é** o mecanismo:
-cada chip chama `setActiveProfile({ type, id: 'preview' })` de verdade no
-`useActiveProfileStore` (Zustand, sem persistência — reseta ao reiniciar o
-app). O `id: 'preview'` é um placeholder deliberado: hoje não há uma lista
-real de perfis vinculados à conta pra escolher um id de verdade.
+depois do login, não no cadastro; ver `auth-flow.md`). Enquanto não existe
+uma tela própria pra isso, o `ProfileSwitcherDropdown` da própria Home **é**
+o mecanismo: fechado, mostra ícone+label do perfil ativo (ou "Escolher
+perfil" quando nenhum está ativo); tocar abre a lista e escolher uma opção
+chama `setActiveProfile(profile)` de verdade no `useActiveProfileStore`
+(Zustand, sem persistência — reseta ao reiniciar o app).
 
 Isso significa que qualquer guard de rota que leia `activeProfile.type`
 (`useProfileGuard`, ver `../architecture.md`) já funciona de ponta a ponta
 hoje — só a origem do valor é manual em vez de vir de uma sessão
-persistida. Trocar os chips por uma escolha real de perfil pós-login é
+persistida. Trocar o dropdown por uma escolha real de perfil pós-login é
 substituir a fonte do `setActiveProfile`, não reescrever o consumidor.
 
-**Direção decidida pro próximo ciclo (ainda não implementada):** a versão
-real não vai ser 3 chips sempre visíveis — vai ser um **dropdown na Home**
-que só lista os perfis que a conta realmente tem vinculados (ex: alguém
-que só é Responsável não vê "Cuidador" como opção). Isso também fecha o
-gap do RF21/NEG06 em `../requirements.md` — o dropdown na Home passa a ser
-o mecanismo de "escolha de perfil" que aquele requisito pede, no lugar da
-tela de escolha centralizada que existia antes (`profile-choice.tsx`,
-removida — ver `auth-flow.md`). Vai exigir uma lista real de perfis
-vinculados à conta (hoje só existe o perfil ativo, não a lista de quais
-existem) antes de dar pra construir de verdade.
+**A lista abre sobreposta, não empurra o layout:** a lista de opções
+renderiza dentro de um `Modal` do React Native (`transparent`,
+`animationType="fade"`), não como um `View` comum abaixo do botão — por
+isso não empurra os cards da Home pra baixo quando abre. A posição é
+calculada com `triggerRef.current.measureInWindow(...)` ao abrir (posição
+em tela do botão), com um fallback fixo pra quando a medição não resolve
+(ex: ambiente de teste, onde `measureInWindow` não roda de verdade — por
+isso o `isOpen` liga antes da medição, e nunca depende dela pra abrir). Um
+`Pressable` cobrindo a tela inteira funciona como backdrop: toca fora da
+lista fecha sem trocar o perfil ativo.
 
-A ordem dos chips (`PROFILE_ORDER` em
-`src/features/auth/theme/profileTheme.ts`) é Cuidador → Pessoa cuidada →
-Responsável, e cada chip usa a cor do perfil (`getProfileTheme`) quando
-selecionado — mesmo mapeamento perfil → cor/ícone/label usado em
+**Perfis vinculados são mockados, não os três fixos:** as opções listadas
+vêm de `MOCK_LINKED_PROFILES`
+(`src/features/auth/mockLinkedProfiles.ts`) — hoje só Cuidador e
+Responsável, deliberadamente **sem** Pessoa cuidada, pra provar que o
+dropdown filtra pelos perfis vinculados em vez de sempre oferecer os três
+(diferente do antigo `ProfileModeSwitcher`, removido). Cada `ActiveProfile`
+mockado tem um `id` fixo (`preview-family`/`preview-caregiver`); ainda não
+existe uma lista real de perfis vinculados vinda de conta autenticada —
+quando essa lista existir de verdade (backend), é só trocar a fonte de
+`MOCK_LINKED_PROFILES` por ela, o componente não muda.
+
+Isso fecha a parte de UI do gap RF21/NEG06 em `../requirements.md` — o
+dropdown na Home é o mecanismo de "escolha de perfil" que aquele requisito
+pede, no lugar da tela de escolha centralizada que existia antes
+(`profile-choice.tsx`, removida — ver `auth-flow.md`). O que **ainda**
+falta pro gap fechar de vez: `useProfileGuard` continua redirecionando
+pra `/(auth)` (a Splash) quando falta o perfil exigido, não pra
+`/(shared)/home` — ver "Gaps conhecidos" em `../requirements.md`.
+
+Cada opção do dropdown usa a cor do perfil (`getProfileTheme`) quando
+selecionada — mesmo mapeamento perfil → cor/ícone/label usado em
 `app/(auth)/confirmation.tsx`.
 
 ## O que é mockado
@@ -103,7 +121,11 @@ Tudo. Nenhum card busca dado de rede — todos os valores vêm de
 Nenhum card navega pra lugar nenhum ao tocar — remédios, sinais vitais e
 agenda ainda não têm tela de detalhe (são os próximos itens do roadmap;
 ver `docs/product/vision.md`). O botão "Finalizar atendimento" do
-`OngoingCareCard` também não tem ação (`onPress={() => {}}`).
+`OngoingCareCard` também não tem ação (`onPress={() => {}}`). A única
+navegação real que sai da Home hoje é o botão "Ver meu perfil público" no
+modo `caregiver` (→ `/(caregiver)`, tela real — ver
+`caregiver-profile.md`) e o CTA "Quero ser cuidador" (→
+`/(caregiver-onboarding)/intro`).
 
 ## Cronômetro do atendimento
 
@@ -117,10 +139,11 @@ visual de cronômetro rodando.
 
 - `getGreeting.test.ts` e `formatElapsed.test.ts` cobrem os dois helpers
   puros (saudação por horário, formatação `HH:MM:SS` do cronômetro).
-- `HomeHeader.test.tsx` e `ProfileModeSwitcher.test.tsx` cobrem os
-  componentes fixos do topo com RTL, incluindo o `ProfileModeSwitcher`
-  chamando `setActiveProfile` de verdade no store ao tocar num chip (o
-  store em si já tem sua própria suíte em `useActiveProfileStore.test.ts`).
+- `HomeHeader.test.tsx` e `ProfileSwitcherDropdown.test.tsx` cobrem os
+  componentes fixos do topo com RTL, incluindo o dropdown listando só os
+  perfis de `MOCK_LINKED_PROFILES` (não os três) e chamando
+  `setActiveProfile` de verdade no store ao tocar numa opção (o store em
+  si já tem sua própria suíte em `useActiveProfileStore.test.ts`).
 - Os cinco cards (`OngoingCareCard`, `TodaysTasksCard`, `MedicationsCard`,
   `VitalSignsCard`, `UpcomingAppointmentCard`) são apresentacionais com
   dados mockados fixos e não têm arquivo de teste dedicado — verificação é

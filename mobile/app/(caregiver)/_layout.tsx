@@ -6,7 +6,7 @@ export default function CaregiverLayout() {
 
   return (
     <Tabs>
-      <Tabs.Screen name="index" options={{ title: 'Perfil' }} />
+      <Tabs.Screen name="index" options={{ title: 'Perfil', headerShown: false }} />
     </Tabs>
   );
 }

@@ -34,6 +34,7 @@ mocked, decisions and gotchas specific to it (not general conventions):
 - `docs/features/caregiver-onboarding.md` — the 11-screen mocked identity
   verification flow, its state machine, the OTP test code.
 - `docs/features/home.md` — the unified Home screen, how it adapts to the active profile, what's mocked.
+- `docs/features/caregiver-profile.md` — the caregiver's public profile screen (`(caregiver)/index.tsx`), reached from Home's "Ver meu perfil público" button.
 
 Visual design system (colors, typography, spacing, component specs) lives at
 `docs/design/design-system.md`.

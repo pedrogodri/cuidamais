@@ -117,8 +117,10 @@ Backend ainda não definido — toda comunicação externa fica isolada em
   `<Stack screenOptions={{ headerShown: false }} />`). Fluxo:
   `index` (splash) → `onboarding` → `signup` → `(shared)/home`.
 - `app/(caregiver)` e `app/(family)` — cada um é um `Tabs` navigator próprio,
-  guardado por `useProfileGuard`. Hoje só têm a rota `index` (placeholder) e
-  não fazem parte do caminho principal de navegação ainda (ver nota abaixo).
+  guardado por `useProfileGuard`. `(caregiver)` já tem conteúdo real (perfil
+  público do cuidador, ver `features/caregiver-profile.md`), alcançável a
+  partir da Home no modo Cuidador. `(family)` ainda só tem a rota `index`
+  (placeholder — vai virar a busca de cuidadores, RF02/RF11).
 - `app/(shared)` — `Stack` simples, sem guard. `home.tsx` é hoje **a** Home
   única do app (independente de perfil) — tem o CTA de teste "Quero ser
   cuidador" que abre `app/(caregiver-onboarding)/intro`.
@@ -148,7 +150,10 @@ de dev. Para testar do zero, use um deep link explícito
   e-mail, backend). Existe para validar a experiência visual antes de
   qualquer integração — ver `app/(caregiver-onboarding)/intro.tsx` e
   vizinhos para os detalhes de cada estado simulado.
-- `(caregiver)`, `(family)` e `(shared)/settings` ainda são placeholders
-  (`View` + `Text` fixos) e **não fazem parte da navegação principal
-  atual** — cada uma vira seu próprio ciclo de spec/plano conforme a ordem
-  do roadmap de produto (busca, chat, remédios, agenda...).
+- `app/(caregiver)/index.tsx` — perfil público do cuidador, real (dados
+  mockados) e alcançável a partir da Home no modo Cuidador. Ver
+  `features/caregiver-profile.md`.
+- `(family)` e `(shared)/settings` ainda são placeholders (`View` + `Text`
+  fixos) e **não fazem parte da navegação principal atual** — cada uma vira
+  seu próprio ciclo de spec/plano conforme a ordem do roadmap de produto
+  (busca, chat, remédios, agenda...).

@@ -3,6 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useAuth } from '@/app-providers/AuthProvider';
 import { Button } from '@/shared/ui/Button';
 import { TextField } from '@/shared/ui/TextField';
 import { H1 } from '@/shared/ui/Typography';
@@ -15,13 +16,14 @@ interface FormErrors {
 
 export default function Signup() {
   const insets = useSafeAreaInsets();
+  const { signIn } = useAuth();
 
   const [name, setName] = useState('');
   const [contact, setContact] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<FormErrors>({});
 
-  function handleSubmit() {
+  async function handleSubmit() {
     const nextErrors: FormErrors = {};
     if (!name.trim()) nextErrors.name = 'Informe seu nome completo.';
     if (!contact.trim()) nextErrors.contact = 'Informe um e-mail ou telefone.';
@@ -29,9 +31,12 @@ export default function Signup() {
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
-    // One login covers every profile a person might hold — signup goes
-    // straight to Home; picking up a specific profile (e.g. caregiver) is a
-    // later, separate flow reachable from there, not part of signup itself.
+    // No backend to register against yet — a mock token is enough to
+    // populate a real session so profile-guarded routes become reachable.
+    // One login still covers every profile a person might hold — signup
+    // goes straight to Home; picking up a specific profile (e.g. caregiver)
+    // is a later, separate flow reachable from there, not part of signup.
+    await signIn({ token: `mock-token-${Date.now()}` });
     router.replace('/(shared)/home');
   }
 

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { router } from 'expo-router';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useAuth } from '@/app-providers/AuthProvider';
 import { Button } from '@/shared/ui/Button';
 import { TextField } from '@/shared/ui/TextField';
 import { H1 } from '@/shared/ui/Typography';
@@ -13,20 +14,21 @@ interface FormErrors {
 
 export default function Login() {
   const insets = useSafeAreaInsets();
+  const { signIn } = useAuth();
   const [contact, setContact] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<FormErrors>({});
 
-  function handleSubmit() {
+  async function handleSubmit() {
     const nextErrors: FormErrors = {};
     if (!contact.trim()) nextErrors.contact = 'Informe seu e-mail ou telefone.';
     if (!password) nextErrors.password = 'Informe sua senha.';
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
-    // Login network integration is out of scope for this design pass —
-    // any filled-in credentials are accepted so the rest of the app is
-    // reachable for review.
+    // No backend to authenticate against yet — a mock token is enough to
+    // populate a real session so profile-guarded routes become reachable.
+    await signIn({ token: `mock-token-${Date.now()}` });
     router.replace('/(shared)/home');
   }
 

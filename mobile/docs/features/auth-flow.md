@@ -15,7 +15,7 @@ Onboarding (3 slides)
 Signup
   → conta criada → (shared)/home.tsx   [replace, não push]
 Login (alcançável a partir de Signup e vice-versa)
-  → sem destino próprio ainda (submit é no-op)
+  → conta autenticada → (shared)/home.tsx   [replace, não push]
 ```
 
 Não existe mais uma etapa de escolha de perfil no cadastro — **um único
@@ -46,11 +46,14 @@ perfil" a partir da Home), comece por elas em vez de recriar.
 
 ## O que é mockado
 
-- **Login e Signup**: validação de campo é real (nome/e-mail/senha mínima),
-  mas o `handleSubmit` não bate em nenhum backend — não existe ainda
-  `createApiClient` instanciado pra auth. `AuthProvider.signIn` existe e
-  funciona (grava token via `expo-secure-store`), mas nada nesses formulários
-  chama ele ainda.
+- **Login e Signup**: validação de campo é real (nome/e-mail/senha mínima).
+  Ao passar na validação, ambos chamam `AuthProvider.signIn({ token })` com
+  um token mock (`` `mock-token-${Date.now()}` ``) antes de navegar pra Home
+  — não existe ainda `createApiClient` instanciado pra auth, então não há
+  chamada de backend real, mas a sessão fica populada de verdade (persistida
+  via `expo-secure-store`), o que já destrava as rotas guardadas por
+  `useProfileGuard` (`(caregiver)`/`(family)`) contanto que o perfil ativo
+  correspondente também esteja setado.
 - **Splash**: usa a logo real (`assets/splash-icon.png`), não é mais
   placeholder.
 

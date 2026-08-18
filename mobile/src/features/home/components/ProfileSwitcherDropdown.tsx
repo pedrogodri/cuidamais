@@ -6,7 +6,7 @@ import {
   type ActiveProfile,
 } from '@/features/auth/store/useActiveProfileStore';
 import { MOCK_LINKED_PROFILES } from '@/features/auth/mockLinkedProfiles';
-import { getProfileTheme, type ProfileTheme } from '@/features/auth/theme/profileTheme';
+import { getProfileIconColorHex, getProfileTheme } from '@/features/auth/theme/profileTheme';
 import { elevation } from '@/shared/ui/theme';
 import { Caption } from '@/shared/ui/Typography';
 
@@ -16,14 +16,6 @@ interface Anchor {
   width: number;
   height: number;
 }
-
-// Icon-in-circle needs a real color value (Ionicons doesn't read NativeWind
-// classes), so each theme's -700 shade is mirrored here as a hex constant.
-const ICON_COLOR: Record<ProfileTheme['type'], string> = {
-  caregiver: '#123D36',
-  cared_person: '#A9721F',
-  family: '#A8455F',
-};
 
 const NEUTRAL_ICON_COLOR = '#5C6B67';
 
@@ -64,7 +56,7 @@ export function ProfileSwitcherDropdown() {
         <Ionicons
           name={activeTheme?.icon ?? 'person-outline'}
           size={16}
-          color={activeTheme ? ICON_COLOR[activeTheme.type] : NEUTRAL_ICON_COLOR}
+          color={activeTheme ? getProfileIconColorHex(activeTheme.type) : NEUTRAL_ICON_COLOR}
         />
         <Caption
           className={`font-body-medium ${activeTheme ? activeTheme.textClass700 : 'text-neutral-500'}`}
@@ -131,7 +123,7 @@ export function ProfileSwitcherDropdown() {
                     <Ionicons
                       name={theme.icon}
                       size={18}
-                      color={selected ? ICON_COLOR[theme.type] : NEUTRAL_ICON_COLOR}
+                      color={selected ? getProfileIconColorHex(theme.type) : NEUTRAL_ICON_COLOR}
                     />
                     <Caption
                       className={`flex-1 font-body-medium ${selected ? theme.textClass700 : 'text-neutral-900'}`}
@@ -139,7 +131,11 @@ export function ProfileSwitcherDropdown() {
                       {theme.label}
                     </Caption>
                     {selected ? (
-                      <Ionicons name="checkmark" size={16} color={ICON_COLOR[theme.type]} />
+                      <Ionicons
+                        name="checkmark"
+                        size={16}
+                        color={getProfileIconColorHex(theme.type)}
+                      />
                     ) : null}
                   </Pressable>
                 );

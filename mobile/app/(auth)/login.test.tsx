@@ -37,7 +37,7 @@ describe('Login', () => {
     await fireEvent.press(screen.getByRole('button', { name: 'Entrar' }));
 
     expect(signIn).toHaveBeenCalledWith({ token: expect.any(String) });
-    expect(router.replace).toHaveBeenCalledWith('/(shared)/home');
+    expect(router.replace).toHaveBeenCalledWith('/(shared)/(tabs)/home');
   });
 
   it('does not sign in when the form is invalid', async () => {

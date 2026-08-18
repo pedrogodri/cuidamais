@@ -42,11 +42,6 @@ export default function Home() {
             clockInTime={MOCK_ONGOING_CARE.clockInTime}
           />
           <TodaysTasksCard tasks={MOCK_TODAYS_TASKS} />
-          <Button
-            label="Ver meu perfil público"
-            variant="secondary"
-            onPress={() => router.push('/(caregiver)')}
-          />
         </View>
       ) : null}
 

@@ -37,7 +37,7 @@ export default function Signup() {
     // goes straight to Home; picking up a specific profile (e.g. caregiver)
     // is a later, separate flow reachable from there, not part of signup.
     await signIn({ token: `mock-token-${Date.now()}` });
-    router.replace('/(shared)/home');
+    router.replace('/(shared)/(tabs)/home');
   }
 
   return (

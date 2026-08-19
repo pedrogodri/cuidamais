@@ -64,7 +64,16 @@ export default function TabsLayout() {
     : DEFAULT_TONE;
 
   return (
-    <Tabs screenOptions={{ headerShown: false, tabBarShowLabel: false }}>
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarShowLabel: false,
+        // Overrides React Navigation's default ~31x28px icon-only box
+        // (see docs/features/navigation.md) so tabBarIcon can render an
+        // icon+label pill without the label getting clipped.
+        tabBarIconStyle: { width: 100, height: 32 },
+      }}
+    >
       {TABS.map((tab) => (
         <Tabs.Screen
           key={tab.name}

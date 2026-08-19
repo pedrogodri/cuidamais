@@ -35,10 +35,30 @@ perfil ativo, usa petrol como tom padrão (`DEFAULT_TONE` em `_layout.tsx`).
 
 Implementado via `tabBarShowLabel: false` + `tabBarIcon` retornando
 ícone+label juntos (componente `TabBarIcon`,
-`src/features/navigation/components/`) — não via `tabBarButton`, que
-exigiria importar `BottomTabBarButtonProps` de um caminho profundo interno
-do `expo-router` (`expo-router/build/react-navigation/bottom-tabs`, não
-reexportado no pacote principal).
+`src/features/navigation/components/`), com `tabBarIconStyle: { width: 100,
+height: 32 }` no `screenOptions` do `Tabs`.
+
+**Duas armadilhas reais encontradas aqui, nessa ordem:**
+
+1. **`tabBarIcon` sozinho corta o label.** O wrapper interno do React
+   Navigation (`TabBarIcon` em
+   `expo-router/build/react-navigation/bottom-tabs/views/`) força o
+   conteúdo de `tabBarIcon` a caber numa caixa fixa de ~31×28px (pensada só
+   pra um ícone) — qualquer label mais longo que uma letra fica cortado
+   (ex: "Home" virava só "H", visto rodando no simulador). Corrigido
+   passando `tabBarIconStyle` — vira o `style` que esse wrapper interno
+   mescla por cima do tamanho padrão, então `{ width: 100, height: 32 }`
+   sobrescreve o 31×28 travado. O componente `TabBarIcon` também precisa de
+   `self-start` na `View` raiz — sem isso, o `alignItems: 'stretch'` padrão
+   do RN estica a pill pra ocupar a largura toda da caixa (100px) em vez de
+   abraçar só o conteúdo.
+2. **`tabBarButton` (dá controle total do item, sem essa caixa) parecia a
+   correção óbvia pro problema acima — mas o Expo Router recusa em runtime**
+   com `Error: Cannot use \`href\` and \`tabBarButton\` together.`Como
+esconder aba por perfil depende de`href: null`/`undefined`por`Tabs.Screen`(ver tabela acima),`tabBarButton` está descartado
+   enquanto isso for necessário — só descoberto rodando o app de verdade,
+   não pelo TypeScript nem pelos testes (nenhum dos dois pega esse tipo de
+   incompatibilidade de runtime entre opções do React Navigation).
 
 ## O que é real vs. placeholder
 

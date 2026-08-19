@@ -25,7 +25,7 @@ export function TabBarIcon({
 }: TabBarIconProps) {
   return (
     <View
-      className={`flex-row items-center gap-1.5 rounded-pill px-3 py-1.5 ${focused ? activeBgClass : ''}`}
+      className={`flex-row items-center gap-1.5 self-start rounded-pill px-3 py-1.5 ${focused ? activeBgClass : ''}`}
     >
       <Ionicons
         name={focused ? activeIcon : icon}

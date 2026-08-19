@@ -1,6 +1,4 @@
-import { Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
-import { Pressable, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AboutSection } from '@/features/caregiver-profile/components/AboutSection';
 import { ProfileHeaderCard } from '@/features/caregiver-profile/components/ProfileHeaderCard';
@@ -11,21 +9,12 @@ import {
 } from '@/features/caregiver-profile/mockCaregiverProfile';
 import { H3 } from '@/shared/ui/Typography';
 
-export default function CaregiverHome() {
+export default function Perfil() {
   const insets = useSafeAreaInsets();
 
   return (
     <View className="flex-1 bg-neutral-0" style={{ paddingTop: insets.top }}>
-      <View className="flex-row items-center gap-3 border-b border-neutral-100 px-2 py-3">
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Voltar"
-          hitSlop={12}
-          onPress={() => router.back()}
-          className="h-10 w-10 items-center justify-center rounded-full active:bg-neutral-100"
-        >
-          <Ionicons name="chevron-back" size={22} color="#26302E" />
-        </Pressable>
+      <View className="border-b border-neutral-100 px-4 py-3">
         <H3>Perfil</H3>
       </View>
 

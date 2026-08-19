@@ -29,7 +29,7 @@ export default function Login() {
     // No backend to authenticate against yet — a mock token is enough to
     // populate a real session so profile-guarded routes become reachable.
     await signIn({ token: `mock-token-${Date.now()}` });
-    router.replace('/(shared)/home');
+    router.replace('/(shared)/(tabs)/home');
   }
 
   return (

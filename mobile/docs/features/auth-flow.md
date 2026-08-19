@@ -1,4 +1,4 @@
-# Fluxo de autenticação (`app/(auth)/*`, `app/(shared)/home.tsx`)
+# Fluxo de autenticação (`app/(auth)/*`, `app/(shared)/(tabs)/home.tsx`)
 
 Documenta o que existe hoje nas telas de auth — decisões tomadas, o que é
 real vs. mockado, e por quê. Para convenções gerais de código (safe area,
@@ -13,9 +13,9 @@ Splash (index.tsx)
 Onboarding (3 slides)
   → "Começar"/"Pular" → Signup
 Signup
-  → conta criada → (shared)/home.tsx   [replace, não push]
+  → conta criada → (shared)/(tabs)/home.tsx   [replace, não push]
 Login (alcançável a partir de Signup e vice-versa)
-  → conta autenticada → (shared)/home.tsx   [replace, não push]
+  → conta autenticada → (shared)/(tabs)/home.tsx   [replace, não push]
 ```
 
 Não existe mais uma etapa de escolha de perfil no cadastro — **um único
@@ -51,9 +51,11 @@ perfil" a partir da Home), comece por elas em vez de recriar.
   um token mock (`` `mock-token-${Date.now()}` ``) antes de navegar pra Home
   — não existe ainda `createApiClient` instanciado pra auth, então não há
   chamada de backend real, mas a sessão fica populada de verdade (persistida
-  via `expo-secure-store`), o que já destrava as rotas guardadas por
-  `useProfileGuard` (`(caregiver)`/`(family)`) contanto que o perfil ativo
-  correspondente também esteja setado.
+  via `expo-secure-store`), o que já destrava a tab bar de `(shared)/(tabs)`
+  (guardada só por sessão, via `useSessionGuard`). Perfil e Buscar não são
+  rotas guardadas por tipo — são abas mostradas/escondidas conforme o
+  perfil ativo (`isTabVisible`), contanto que o perfil ativo correspondente
+  também esteja setado — ver `navigation.md`.
 - **Splash**: usa a logo real (`assets/splash-icon.png`), não é mais
   placeholder.
 

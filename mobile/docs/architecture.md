@@ -29,8 +29,7 @@ moram dentro da feature.
 ```
 app/
   (auth)/        # login, cadastro, onboarding, escolha de perfil — sem tabs
-  (caregiver)/   # tab navigator do perfil Cuidador, protegido por guard
-  (family)/      # tab navigator do perfil Responsável/Pessoa cuidada, protegido
+  (shared)/(tabs)/ # único Tabs navigator pós-login, abas mudam com o perfil ativo
   (shared)/      # telas empilhadas acessíveis dos dois lados (configurações, etc.)
   _layout.tsx    # providers globais + carregamento de fontes + splash nativa
 
@@ -70,7 +69,7 @@ um perfil (ex: Responsável e Cuidador na mesma conta):
 
 Por causa disso, **criar conta não escolhe perfil** — um único login serve
 para tudo. `Signup` (sem tema/cor, cadastro puro) vai direto para
-`app/(shared)/home.tsx`. Escolher/ativar um perfil específico (ex: virar
+`app/(shared)/(tabs)/home.tsx`. Escolher/ativar um perfil específico (ex: virar
 Cuidador) é um fluxo separado, iniciado a partir da Home, não do cadastro —
 ver a seção "Verificação de Cuidador" abaixo. `ProfileOptionCard`,
 `profileTheme.ts` e a tela `app/(auth)/confirmation.tsx` continuam existindo
@@ -85,9 +84,13 @@ só não estão ligados na navegação principal no momento.
   só retorna `true` se houver sessão **e** o perfil ativo bater com o tipo
   exigido pela rota.
 - `useProfileGuard(requiredType)` — hook que roda essa checagem em
-  `useEffect` e faz `router.replace('/(auth)')` quando falha. Cada
-  `_layout.tsx` de grupo protegido (`(caregiver)`, `(family)`) chama esse
-  hook antes de renderizar suas tabs.
+  `useEffect` e faz `router.replace('/(auth)')` quando falha. Hoje nenhum
+  `_layout.tsx` chama esse hook: o único grupo protegido pós-login,
+  `(shared)/(tabs)`, usa `useSessionGuard` (protege por sessão, não por
+  tipo de perfil) e cada aba só aparece ou some conforme o perfil ativo
+  (`isTabVisible`). `useProfileGuard`/`canAccessProfileRoute` continuam
+  existindo, sem uso ativo, prontos pra quando um guard por tipo dentro de
+  uma aba específica for necessário — ver `features/navigation.md`.
 
 `(shared)` não tem guard próprio — é o grupo de telas acessíveis dos dois
 lados (chat, configurações), então a proteção fica a cargo de cada tela
@@ -115,15 +118,13 @@ Backend ainda não definido — toda comunicação externa fica isolada em
 
 - `app/(auth)` — Stack sem header (`_layout.tsx` usa
   `<Stack screenOptions={{ headerShown: false }} />`). Fluxo:
-  `index` (splash) → `onboarding` → `signup` → `(shared)/home`.
-- `app/(caregiver)` e `app/(family)` — cada um é um `Tabs` navigator próprio,
-  guardado por `useProfileGuard`. `(caregiver)` já tem conteúdo real (perfil
-  público do cuidador, ver `features/caregiver-profile.md`), alcançável a
-  partir da Home no modo Cuidador. `(family)` ainda só tem a rota `index`
-  (placeholder — vai virar a busca de cuidadores, RF02/RF11).
-- `app/(shared)` — `Stack` simples, sem guard. `home.tsx` é hoje **a** Home
-  única do app (independente de perfil) — tem o CTA de teste "Quero ser
-  cuidador" que abre `app/(caregiver-onboarding)/intro`.
+  `index` (splash) → `onboarding` → `signup` → `(shared)/(tabs)/home`.
+- `app/(shared)/(tabs)` — um único `Tabs` navigator pós-login, guardado só
+  por sessão (`useSessionGuard`, não por tipo de perfil). As abas visíveis
+  mudam com o perfil ativo (`isTabVisible`) — ver
+  `features/navigation.md`. Home é a única aba sempre visível.
+- `app/(shared)` (fora de `(tabs)`) — `Stack` simples, sem guard;
+  `settings.tsx` mora aqui, fora da tab bar.
 - `app/(caregiver-onboarding)` — Stack sem header, também sem guard (o
   usuário ainda não é Cuidador enquanto passa por ele). Fluxo mockado de
   verificação de identidade para virar Cuidador — 11 telas, sem lógica real
@@ -143,17 +144,18 @@ de dev. Para testar do zero, use um deep link explícito
 
 ## O que é placeholder vs. real
 
-- `app/(auth)/*` (splash, onboarding, signup, login) e `app/(shared)/home.tsx`
-  — completos, é o caminho principal navegável hoje.
+- `app/(auth)/*` (splash, onboarding, signup, login) e
+  `app/(shared)/(tabs)/home.tsx` — completos, é o caminho principal
+  navegável hoje.
 - `app/(caregiver-onboarding)/*` — telas completas, mas **totalmente
   mockado**: nenhuma integração real (OCR, reconhecimento facial, SMS,
   e-mail, backend). Existe para validar a experiência visual antes de
   qualquer integração — ver `app/(caregiver-onboarding)/intro.tsx` e
   vizinhos para os detalhes de cada estado simulado.
-- `app/(caregiver)/index.tsx` — perfil público do cuidador, real (dados
-  mockados) e alcançável a partir da Home no modo Cuidador. Ver
+- `app/(shared)/(tabs)/perfil.tsx` — perfil público do cuidador, real
+  (dados mockados), aba visível só no modo Cuidador. Ver
   `features/caregiver-profile.md`.
-- `(family)` e `(shared)/settings` ainda são placeholders (`View` + `Text`
-  fixos) e **não fazem parte da navegação principal atual** — cada uma vira
-  seu próprio ciclo de spec/plano conforme a ordem do roadmap de produto
-  (busca, chat, remédios, agenda...).
+- `app/(shared)/(tabs)/buscar.tsx`, `agenda.tsx`, `chat.tsx` e
+  `(shared)/settings.tsx` ainda são placeholders (`View` + `Text` fixos) —
+  cada um vira seu próprio ciclo de spec/plano conforme a ordem do roadmap
+  de produto (busca, chat, remédios, agenda...).

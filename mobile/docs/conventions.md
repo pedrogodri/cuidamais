@@ -108,7 +108,7 @@ diferentes dentro de `src/`.
 - Colocados ao lado do arquivo testado (`Button.tsx` + `Button.test.tsx`),
   nunca em pasta `__tests__` separada.
 - **Telas em `app/` também seguem "teste ao lado do arquivo"** (ex:
-  `app/(shared)/home.tsx` + `home.test.tsx`, `app/(auth)/login.tsx` +
+  `app/(shared)/(tabs)/home.tsx` + `home.test.tsx`, `app/(auth)/login.tsx` +
   `login.test.tsx`). Isso funciona apesar de o Expo Router varrer todo
   arquivo em `app/` como rota em potencial e o Metro tentar empacotar tudo
   que um `.test.tsx` importa no bundle nativo real — inclusive

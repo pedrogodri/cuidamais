@@ -1,4 +1,9 @@
-import { getProfileTheme, PROFILE_ORDER, parseProfileType } from './profileTheme';
+import {
+  getProfileIconColorHex,
+  getProfileTheme,
+  PROFILE_ORDER,
+  parseProfileType,
+} from './profileTheme';
 
 describe('getProfileTheme', () => {
   it('returns petrol tokens for caregiver', () => {
@@ -33,5 +38,13 @@ describe('parseProfileType', () => {
   it('unwraps an array param (expo-router can pass repeated query keys as arrays)', () => {
     expect(parseProfileType(['vinculo-ish', 'family'])).toBe('caregiver');
     expect(parseProfileType(['family'])).toBe('family');
+  });
+});
+
+describe('getProfileIconColorHex', () => {
+  it('returns the -700 hex shade for each profile type', () => {
+    expect(getProfileIconColorHex('caregiver')).toBe('#123D36');
+    expect(getProfileIconColorHex('cared_person')).toBe('#A9721F');
+    expect(getProfileIconColorHex('family')).toBe('#A8455F');
   });
 });

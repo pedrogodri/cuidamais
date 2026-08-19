@@ -1,4 +1,4 @@
-# Home unificada (`app/(shared)/home.tsx`)
+# Home unificada (`app/(shared)/(tabs)/home.tsx`)
 
 Documenta o que existe hoje na Home — decisão original em
 `docs/superpowers/specs/2026-08-17-unified-home-design.md`, este arquivo é
@@ -8,14 +8,14 @@ ver `../architecture.md`.
 ## O que é
 
 O painel inicial pós-login, que muda de conteúdo conforme o **perfil
-ativo** (`useActiveProfileStore`), lido em `app/(shared)/home.tsx`. Header
+ativo** (`useActiveProfileStore`), lido em `app/(shared)/(tabs)/home.tsx`. Header
 e `ProfileSwitcherDropdown` são fixos; a seção principal troca por tipo de
 perfil (`caregiver` / `family` / `cared_person`).
 
 ## Estrutura
 
 ```
-app/(shared)/home.tsx                                  — lê useActiveProfileStore, monta a tela
+app/(shared)/(tabs)/home.tsx                           — lê useActiveProfileStore, monta a tela
 
 src/features/home/
   components/
@@ -36,8 +36,9 @@ src/features/home/
 `activeProfile?.type` decide qual bloco aparece; `family` e `cared_person`
 compartilham o mesmo bloco de conteúdo (`isFamilyMode` em `home.tsx`):
 
-- **`caregiver`**: `OngoingCareCard` + `TodaysTasksCard` + botão "Ver meu
-  perfil público" (→ `/(caregiver)`, ver `caregiver-profile.md`).
+- **`caregiver`**: `OngoingCareCard` + `TodaysTasksCard`. (O antigo botão
+  "Ver meu perfil público" foi removido — "Perfil" agora é uma aba da tab
+  bar, ver `navigation.md`.)
 - **`family`**: legenda "Cuidando de: {nome}" + `MedicationsCard` +
   `VitalSignsCard` + `UpcomingAppointmentCard`.
 - **`cared_person`**: os mesmos três cards de `family`, mas sem a legenda —
@@ -95,7 +96,7 @@ pede, no lugar da tela de escolha centralizada que existia antes
 (`profile-choice.tsx`, removida — ver `auth-flow.md`). O que **ainda**
 falta pro gap fechar de vez: `useProfileGuard` continua redirecionando
 pra `/(auth)` (a Splash) quando falta o perfil exigido, não pra
-`/(shared)/home` — ver "Gaps conhecidos" em `../requirements.md`.
+`/(shared)/(tabs)/home` — ver "Gaps conhecidos" em `../requirements.md`.
 
 Cada opção do dropdown usa a cor do perfil (`getProfileTheme`) quando
 selecionada — mesmo mapeamento perfil → cor/ícone/label usado em
@@ -122,10 +123,10 @@ Nenhum card navega pra lugar nenhum ao tocar — remédios, sinais vitais e
 agenda ainda não têm tela de detalhe (são os próximos itens do roadmap;
 ver `docs/product/vision.md`). O botão "Finalizar atendimento" do
 `OngoingCareCard` também não tem ação (`onPress={() => {}}`). A única
-navegação real que sai da Home hoje é o botão "Ver meu perfil público" no
-modo `caregiver` (→ `/(caregiver)`, tela real — ver
-`caregiver-profile.md`) e o CTA "Quero ser cuidador" (→
-`/(caregiver-onboarding)/intro`).
+navegação real que sai da Home hoje é o CTA "Quero ser cuidador" (→
+`/(caregiver-onboarding)/intro`) — chegar no Perfil do cuidador agora é
+via a aba "Perfil" da tab bar, não um link dentro da Home (ver
+`navigation.md`).
 
 ## Cronômetro do atendimento
 

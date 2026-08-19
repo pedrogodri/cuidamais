@@ -80,6 +80,18 @@ export function getProfileButtonTone(type: ProfileType) {
   return BUTTON_TONE[type];
 }
 
+const ICON_COLOR_HEX: Record<ProfileType, string> = {
+  caregiver: '#123D36',
+  cared_person: '#A9721F',
+  family: '#A8455F',
+};
+
+// Ionicons' `color` prop needs a real hex value, not a Tailwind class — this
+// mirrors each theme's -700 shade for that one spot.
+export function getProfileIconColorHex(type: ProfileType): string {
+  return ICON_COLOR_HEX[type];
+}
+
 export function parseProfileType(value: string | string[] | undefined): ProfileType {
   const candidate = Array.isArray(value) ? value[0] : value;
   if (candidate === 'caregiver' || candidate === 'cared_person' || candidate === 'family') {

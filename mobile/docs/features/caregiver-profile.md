@@ -1,6 +1,6 @@
-# Perfil público do cuidador (`app/(caregiver)/index.tsx`)
+# Perfil público do cuidador (`app/(shared)/(tabs)/perfil.tsx`)
 
-Documenta o que existe hoje na aba "Perfil" do grupo `(caregiver)` — a
+Documenta o que existe hoje na aba "Perfil" da tab bar — a
 visão pública do cuidador (nome, avaliações, especialidades), correspondente
 a RF03/RF04 de `../../../docs/product/vision.md`.
 
@@ -10,7 +10,7 @@ Tela de leitura (sem edição) mostrando o perfil do cuidador como ele
 apareceria pra uma família na busca. Composta por três seções:
 
 ```
-app/(caregiver)/index.tsx                  — tela fina, monta a tela
+app/(shared)/(tabs)/perfil.tsx              — tela fina, monta a tela
 
 src/features/caregiver-profile/
   components/
@@ -25,18 +25,14 @@ Os selos "Verificado" e "Mais bem avaliado" reaproveitam
 `src/features/caregiver-onboarding/components/` (mesmo componente do fluxo
 de verificação) em vez de duplicar o padrão de badge.
 
-**Cabeçalho próprio, header nativo desligado:** `(caregiver)` é um `Tabs`
-navigator (não `Stack`), então não ganha seta de voltar automática ao ser
-aberto por `router.push` a partir de outro grupo de rota — e o header
-nativo do `Tabs.Screen` (título "Perfil" sozinho, sem botão de voltar)
-só duplicava informação e empurrava o conteúdo pra baixo com um espaço
-vazio grande. Por isso `options.headerShown: false` foi setado em
-`app/(caregiver)/_layout.tsx` pra essa rota, e a tela monta seu próprio
-cabeçalho: uma linha `chevron-back` (botão circular, área de toque 40×40,
-`active:bg-neutral-100`) + `<H3>Perfil</H3>`, com borda inferior sutil
-(`border-neutral-100`) separando do conteúdo — mesmo padrão de botão de
-voltar usado em `app/(caregiver-onboarding)/intro.tsx`, mas em par com um
-título em vez de sozinho.
+**Sem botão de voltar.** Existia (`chevron-back` + `router.back()`)
+enquanto essa tela era alcançada por push a partir da Home; como aba raiz
+da tab bar (ver `navigation.md`), voltar não faz sentido — não há "de
+onde voltar". O cabeçalho ficou só `<H3>Perfil</H3>` com uma borda
+inferior sutil (`border-neutral-100`) separando do conteúdo. O header
+nativo do `Tabs.Screen` continua desligado (`headerShown: false` no
+`_layout.tsx` compartilhado), já que quem desenha o cabeçalho é a própria
+tela.
 
 ## O que é mockado
 
@@ -49,21 +45,19 @@ só informativo, sem processar pagamento (NEG04).
 
 ## Como se chega lá
 
-Alcançável a partir da Home (`app/(shared)/home.tsx`), no modo `caregiver`:
-botão secundário "Ver meu perfil público" abaixo do `TodaysTasksCard`, que
-faz `router.push('/(caregiver)')`. A rota já é acessível porque
-`useProfileGuard('caregiver')` (guard do grupo `(caregiver)`) só exige
-sessão + perfil ativo `caregiver`, ambos reais desde que login/signup
-passaram a chamar `AuthProvider.signIn` (ver `auth-flow.md`) e o
-`ProfileSwitcherDropdown` passou a setar o perfil ativo de verdade (ver
-`home.md`).
+É a aba "Perfil" da tab bar (`app/(shared)/(tabs)/`), visível só quando o
+perfil ativo é `caregiver` — ver `navigation.md` pra regra completa de
+visibilidade por perfil. Antes de virar aba, essa tela vivia em
+`(caregiver)/index.tsx` e era alcançada por um botão na Home
+(`router.push('/(caregiver)')`); esse grupo de rota foi removido quando o
+menu inferior substituiu a navegação por push.
 
 ## Testes
 
 - `ProfileHeaderCard.test.tsx`, `AboutSection.test.tsx`,
   `ReviewsList.test.tsx` cobrem os três componentes com dados fixos,
   incluindo o estado vazio de `ReviewsList` (lista sem avaliações).
-- `home.test.tsx` cobre o link "Ver meu perfil público": aparece só no
-  modo `caregiver` e chama `router.push('/(caregiver)')` ao tocar.
-- `app/(caregiver)/index.test.tsx` cobre o botão de voltar chamando
-  `router.back()`.
+- Chegar na tela agora é só visibilidade de aba, coberta por
+  `getVisibleTabs.test.ts` (ver `navigation.md`) — o antigo teste do link
+  "Ver meu perfil público" em `home.test.tsx` foi removido junto com o
+  link.

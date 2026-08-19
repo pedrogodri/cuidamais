@@ -46,6 +46,12 @@ mobile and backoffice — not all of it built yet) lives at
 is the build order; don't assume a listed feature exists without checking
 the code.
 
+## Working session conventions
+
+- **Plans go in `docs/plans/`, not `~/.claude/plans/`.** Save any plan file (feature plans, task breakdowns) as `docs/plans/YYYY-MM-DD-<topic>.md` so it lives with the project and survives across sessions, instead of the user's local Claude Code plan directory.
+- **Always follow the conventions/patterns already documented in this doc set and already used in the codebase** (naming, file structure, component/testing patterns) — don't introduce a new pattern when an existing one already covers the case.
+- **During implementation, don't run `npm test`, `npm run lint`, or `npm run typecheck` after every step.** Just implement each task and write its unit tests as you go, without running anything in between — running per-step slows a simple feature down a lot. Only once the whole feature/set of tasks is done, run the full `npm test && npm run lint && npm run typecheck` a single time, and fix whatever it finds before considering the work complete.
+
 ## Keeping these docs current
 
 This doc set is meant to grow with the project, not stay frozen at whatever

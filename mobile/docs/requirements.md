@@ -194,9 +194,11 @@ conhecidos" abaixo)_
   (`src/features/home/components/ProfileSwitcherDropdown.tsx`), que lista
   só os perfis vinculados à conta (mockados em
   `src/features/auth/mockLinkedProfiles.ts`, já que ainda não existe uma
-  lista real vinda de conta autenticada — ver `features/home.md`).
+  lista real vinda de conta autenticada — ver `features/home.md`). O menu
+  inferior (`app/(shared)/(tabs)/`, ver `features/navigation.md`)
+  reforça isso escondendo abas que não fazem sentido pro perfil ativo.
   **Ainda falta**: `useProfileGuard`
-  (`src/features/auth/guards/useProfileGuard.ts`) continua redirecionando
-  pra `/(auth)` (a Splash) quando o perfil exigido não existe na conta, em
-  vez de `/(shared)/home` — a tela antiga (`profile-choice.tsx`, removida —
-  ver `features/auth-flow.md`) nunca foi substituída no guard, só na Home.
+  (`src/features/auth/guards/useProfileGuard.ts`) não é chamado por
+  nenhuma rota no momento (o grupo `(tabs)` usa `useSessionGuard`, que só
+  checa sessão) — fica em standby pra quando um guard por tipo dentro de
+  uma aba específica for necessário.

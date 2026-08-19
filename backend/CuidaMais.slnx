@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/CuidaMais.Api/CuidaMais.Api.csproj" />
+    <Project Path="src/CuidaMais.Application/CuidaMais.Application.csproj" />
+    <Project Path="src/CuidaMais.Domain/CuidaMais.Domain.csproj" />
+    <Project Path="src/CuidaMais.Infrastructure/CuidaMais.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CuidaMais.Application.Tests/CuidaMais.Application.Tests.csproj" />
+  </Folder>
+</Solution>

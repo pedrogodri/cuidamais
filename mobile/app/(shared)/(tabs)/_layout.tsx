@@ -1,15 +1,54 @@
+import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import { useActiveProfileStore } from '@/features/auth/store/useActiveProfileStore';
 import { useSessionGuard } from '@/features/auth/guards/useSessionGuard';
 import { getProfileIconColorHex, getProfileTheme } from '@/features/auth/theme/profileTheme';
 import { TabBarIcon } from '@/features/navigation/components/TabBarIcon';
-import { isTabVisible } from '@/features/navigation/getVisibleTabs';
+import { isTabVisible, type TabName } from '@/features/navigation/getVisibleTabs';
 
 const DEFAULT_TONE = {
-  activeBgClass: 'bg-petrol-100',
-  activeTextClass: 'text-petrol-700',
-  activeColorHex: '#123D36',
+  activeBgClass: getProfileTheme('caregiver').bgClass100,
+  activeTextClass: getProfileTheme('caregiver').textClass700,
+  activeColorHex: getProfileIconColorHex('caregiver'),
 };
+
+const TABS: {
+  name: TabName;
+  title: string;
+  icon: keyof typeof Ionicons.glyphMap;
+  activeIcon: keyof typeof Ionicons.glyphMap;
+  label: string;
+}[] = [
+  { name: 'home', title: 'Home', icon: 'home-outline', activeIcon: 'home', label: 'Home' },
+  {
+    name: 'perfil',
+    title: 'Perfil',
+    icon: 'person-outline',
+    activeIcon: 'person',
+    label: 'Perfil',
+  },
+  {
+    name: 'buscar',
+    title: 'Buscar',
+    icon: 'search-outline',
+    activeIcon: 'search',
+    label: 'Buscar',
+  },
+  {
+    name: 'agenda',
+    title: 'Agenda',
+    icon: 'calendar-outline',
+    activeIcon: 'calendar',
+    label: 'Agenda',
+  },
+  {
+    name: 'chat',
+    title: 'Chat',
+    icon: 'chatbubble-outline',
+    activeIcon: 'chatbubble',
+    label: 'Chat',
+  },
+];
 
 export default function TabsLayout() {
   useSessionGuard();
@@ -26,86 +65,25 @@ export default function TabsLayout() {
 
   return (
     <Tabs screenOptions={{ headerShown: false, tabBarShowLabel: false }}>
-      <Tabs.Screen
-        name="home"
-        options={{
-          title: 'Home',
-          href: isTabVisible('home', activeType) ? undefined : null,
-          tabBarIcon: ({ focused }) => (
-            <TabBarIcon
-              focused={focused}
-              icon="home-outline"
-              activeIcon="home"
-              label="Home"
-              {...tone}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="perfil"
-        options={{
-          title: 'Perfil',
-          href: isTabVisible('perfil', activeType) ? undefined : null,
-          tabBarIcon: ({ focused }) => (
-            <TabBarIcon
-              focused={focused}
-              icon="person-outline"
-              activeIcon="person"
-              label="Perfil"
-              {...tone}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="buscar"
-        options={{
-          title: 'Buscar',
-          href: isTabVisible('buscar', activeType) ? undefined : null,
-          tabBarIcon: ({ focused }) => (
-            <TabBarIcon
-              focused={focused}
-              icon="search-outline"
-              activeIcon="search"
-              label="Buscar"
-              {...tone}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="agenda"
-        options={{
-          title: 'Agenda',
-          href: isTabVisible('agenda', activeType) ? undefined : null,
-          tabBarIcon: ({ focused }) => (
-            <TabBarIcon
-              focused={focused}
-              icon="calendar-outline"
-              activeIcon="calendar"
-              label="Agenda"
-              {...tone}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="chat"
-        options={{
-          title: 'Chat',
-          href: isTabVisible('chat', activeType) ? undefined : null,
-          tabBarIcon: ({ focused }) => (
-            <TabBarIcon
-              focused={focused}
-              icon="chatbubble-outline"
-              activeIcon="chatbubble"
-              label="Chat"
-              {...tone}
-            />
-          ),
-        }}
-      />
+      {TABS.map((tab) => (
+        <Tabs.Screen
+          key={tab.name}
+          name={tab.name}
+          options={{
+            title: tab.title,
+            href: isTabVisible(tab.name, activeType) ? undefined : null,
+            tabBarIcon: ({ focused }) => (
+              <TabBarIcon
+                focused={focused}
+                icon={tab.icon}
+                activeIcon={tab.activeIcon}
+                label={tab.label}
+                {...tone}
+              />
+            ),
+          }}
+        />
+      ))}
     </Tabs>
   );
 }

@@ -29,8 +29,7 @@ moram dentro da feature.
 ```
 app/
   (auth)/        # login, cadastro, onboarding, escolha de perfil — sem tabs
-  (caregiver)/   # tab navigator do perfil Cuidador, protegido por guard
-  (family)/      # tab navigator do perfil Responsável/Pessoa cuidada, protegido
+  (shared)/(tabs)/ # único Tabs navigator pós-login, abas mudam com o perfil ativo
   (shared)/      # telas empilhadas acessíveis dos dois lados (configurações, etc.)
   _layout.tsx    # providers globais + carregamento de fontes + splash nativa
 
@@ -70,7 +69,7 @@ um perfil (ex: Responsável e Cuidador na mesma conta):
 
 Por causa disso, **criar conta não escolhe perfil** — um único login serve
 para tudo. `Signup` (sem tema/cor, cadastro puro) vai direto para
-`app/(shared)/home.tsx`. Escolher/ativar um perfil específico (ex: virar
+`app/(shared)/(tabs)/home.tsx`. Escolher/ativar um perfil específico (ex: virar
 Cuidador) é um fluxo separado, iniciado a partir da Home, não do cadastro —
 ver a seção "Verificação de Cuidador" abaixo. `ProfileOptionCard`,
 `profileTheme.ts` e a tela `app/(auth)/confirmation.tsx` continuam existindo
@@ -85,9 +84,13 @@ só não estão ligados na navegação principal no momento.
   só retorna `true` se houver sessão **e** o perfil ativo bater com o tipo
   exigido pela rota.
 - `useProfileGuard(requiredType)` — hook que roda essa checagem em
-  `useEffect` e faz `router.replace('/(auth)')` quando falha. Cada
-  `_layout.tsx` de grupo protegido (`(caregiver)`, `(family)`) chama esse
-  hook antes de renderizar suas tabs.
+  `useEffect` e faz `router.replace('/(auth)')` quando falha. Hoje nenhum
+  `_layout.tsx` chama esse hook: o único grupo protegido pós-login,
+  `(shared)/(tabs)`, usa `useSessionGuard` (protege por sessão, não por
+  tipo de perfil) e cada aba só aparece ou some conforme o perfil ativo
+  (`isTabVisible`). `useProfileGuard`/`canAccessProfileRoute` continuam
+  existindo, sem uso ativo, prontos pra quando um guard por tipo dentro de
+  uma aba específica for necessário — ver `features/navigation.md`.
 
 `(shared)` não tem guard próprio — é o grupo de telas acessíveis dos dois
 lados (chat, configurações), então a proteção fica a cargo de cada tela

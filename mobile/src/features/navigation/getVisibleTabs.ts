@@ -13,7 +13,5 @@ export function isTabVisible(tab: TabName, activeType: ProfileType | null): bool
     case 'agenda':
     case 'chat':
       return activeType !== null;
-    default:
-      return false;
   }
 }

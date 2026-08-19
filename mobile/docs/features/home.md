@@ -96,7 +96,7 @@ pede, no lugar da tela de escolha centralizada que existia antes
 (`profile-choice.tsx`, removida — ver `auth-flow.md`). O que **ainda**
 falta pro gap fechar de vez: `useProfileGuard` continua redirecionando
 pra `/(auth)` (a Splash) quando falta o perfil exigido, não pra
-`/(shared)/home` — ver "Gaps conhecidos" em `../requirements.md`.
+`/(shared)/(tabs)/home` — ver "Gaps conhecidos" em `../requirements.md`.
 
 Cada opção do dropdown usa a cor do perfil (`getProfileTheme`) quando
 selecionada — mesmo mapeamento perfil → cor/ícone/label usado em

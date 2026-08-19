@@ -27,9 +27,7 @@ export default function Confirmation() {
 
   function handleContinue() {
     setActiveProfile({ type: profileType, id: 'draft' });
-    router.replace(
-      profileType === 'caregiver' ? '/(shared)/(tabs)/perfil' : '/(shared)/(tabs)/buscar',
-    );
+    router.replace('/(shared)/(tabs)/home');
   }
 
   return (

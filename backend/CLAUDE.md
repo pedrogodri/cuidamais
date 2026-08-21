@@ -6,20 +6,20 @@ Este é o backend do monorepo `cuidamais` (irmão de `../mobile/`, que tem seu p
 
 ## Stack
 
-- C# / .NET 10 (SDK `10.0.400`)
+- C# / .NET 9 (SDK `9.0.3xx`)
 - ASP.NET Core Web API com Controllers (sem Minimal APIs)
-- Entity Framework Core 10 + SQL Server (LocalDB em dev, instância `MSSQLLocalDB`)
+- Entity Framework Core 9 + SQL Server (LocalDB em dev, instância `MSSQLLocalDB`)
 - xUnit para testes
 
 ## Setup em uma máquina nova
 
-1. Instalar o SDK .NET 10 (`dotnet --list-sdks` deve listar `10.0.400` ou superior).
+1. Instalar o SDK .NET 9 (`dotnet --list-sdks` deve listar `9.0.3xx` ou superior).
 2. Ter uma instância SQL Server acessível — em dev, o LocalDB (`MSSQLLocalDB`) já vem com o Visual Studio Community, não precisa instalar nada.
 3. Configurar a connection string via User Secrets (nunca commitar em `appsettings.json`):
    ```
    dotnet user-secrets set "ConnectionStrings:CuidaMais" "Server=(localdb)\MSSQLLocalDB;Database=CuidaMais;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True" --project src/CuidaMais.Api
    ```
-4. Instalar/atualizar a ferramenta `dotnet-ef` (precisa estar na mesma major version do pacote `Microsoft.EntityFrameworkCore.Design` usado no projeto — hoje EF Core 10):
+4. Instalar/atualizar a ferramenta `dotnet-ef` (precisa estar na mesma major version do pacote `Microsoft.EntityFrameworkCore.Design` usado no projeto — hoje EF Core 9):
    ```
    dotnet tool update -g dotnet-ef
    ```
